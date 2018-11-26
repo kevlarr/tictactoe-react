@@ -1,0 +1,25 @@
+{
+  "name": "hazban",
+  "version": "0.1.0",
+  "description": "i can haz kanban? writing a trello clone to work on react/typescript/etc.",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kevlarr",
+  "license": "ISC",
+  "devDependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.1.6",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2"
+  },
+  "dependencies": {
+    "@types/react": "^16.7.7",
+    "@types/react-dom": "^16.0.10",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
+  }
+}
