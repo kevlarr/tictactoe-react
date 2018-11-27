@@ -1,10 +1,14 @@
 import * as React from 'react';
 
-class Square extends React.Component {
+interface Props {
+    value: number;
+}
+
+class Square extends React.Component<Props, {}> {
     render() {
         return (
             <button className='square'>
-                {/* TODO */}
+                {this.props.value}
             </button>
         );
     }
