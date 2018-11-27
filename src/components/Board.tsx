@@ -6,7 +6,7 @@ class Board extends React.Component {
         const msg = 'Next player: X';
 
         const rows = [0, 1, 2].map(i => (
-            <div className='board-row'>
+            <div key={i} className='board-row'>
                 <Square />
                 <Square />
                 <Square />

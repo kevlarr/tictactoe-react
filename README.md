@@ -1,3 +1,3 @@
-# hazban
+# tix
 
-i can haz kanban? writing a trello clone to work on react/typescript/etc.
+simple thing, tic-tac-toe hotseat in the browser to freshen up on 2018-era react, webpack, typescript, etc
