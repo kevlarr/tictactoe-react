@@ -1,7 +1,7 @@
 {
-  "name": "hazban",
+  "name": "tix",
   "version": "0.1.0",
-  "description": "i can haz kanban? writing a trello clone to work on react/typescript/etc.",
+  "description": "tic-tac-toe with react",
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/webpack",
