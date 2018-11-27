@@ -23,12 +23,13 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.tsx?$/,
-                    loader: 'awesome-typescript-loader',
+                    test: /\.js$/,
+                    loader: 'source-map-loader',
+                    enforce: 'pre',
                 },
                 {
-                    test: /\.js$/,
-                    loader: 'source-map-loader', enforce: 'pre',
+                    test: /\.tsx?$/,
+                    loader: 'awesome-typescript-loader',
                 },
                 {
                     test: /\.html$/,
@@ -43,7 +44,7 @@ module.exports = (env, argv) => {
 
         plugins: [
             new HtmlWebPackPlugin({
-                template: './src/index.html',
+                template: production ? './src/index.production.html' : './src/index.html',
                 filename: './index.html',
             }),
             new MiniCssExtractPlugin({
@@ -54,9 +55,10 @@ module.exports = (env, argv) => {
 
         // Assume global variables exist rather than packaging deps up with bundle,
         // eg. `import * from 'react'` will import from `React` global variable
-        //externals: {
-            //'react': 'React',
-            //'react-dom': 'ReactDOM',
-        //},
+        externals: production ? {
+            'react': 'React',
+            'react-dom': 'ReactDOM',
+        } : {
+        },
     };
 };
