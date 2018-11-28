@@ -4,8 +4,8 @@ import Board from './Board';
 class Game extends React.Component {
     render() {
         return (
-            <div className='game'>
-                <h1>Welcome to tix</h1>
+            <div className='Game'>
+                <h1>tic tac toe</h1>
                 <div className='game-board'>
                     <Board />
                 </div>
