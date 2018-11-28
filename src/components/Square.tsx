@@ -5,14 +5,10 @@ interface Props {
     onClick: () => void;
 }
 
-class Square extends React.Component<Props, {}> {
-    render() {
-        return (
-            <button className='Square' onClick={() => this.props.onClick()}>
-                {this.props.value}
-            </button>
-        );
-    }
-}
+const Square = (props: Props) => (
+    <button className='Square' onClick={props.onClick}>
+        {props.value}
+    </button>
+);
 
 export default Square;
