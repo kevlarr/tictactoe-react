@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Square from './Square';
+import './board.scss';
 
-// FIXME move this to other location
+// FIXME move this to other location?
 enum Token {
     X = 'X',
     O = 'O',
@@ -17,37 +18,39 @@ interface State {
      *   3  4  5
      *   6  7  8
      */
-    squares: Array<Token | null>;
+    cells: Array<Token | null>;
+    currentToken: Token;
 };
 
 class Board extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        const squares = Array<Token | null>(9);
+        const cells = Array<Token | null>(9);
 
-        for (let i = 0; i < 9; i++) { squares[i] = null };
+        for (let i = 0; i < 9; i++) { cells[i] = null };
 
-        this.state = { squares };
+        this.state = { cells, currentToken: Token.X };
     }
 
     handleClick(i: number) {
-        const squares = this.state.squares.slice();
-        squares[i] = Token.X;
-        this.setState({ squares });
+        if (this.state.cells[i]) { return; }
+
+        const token = this.state.currentToken;
+        const cells = this.state.cells.slice();
+        cells[i] = token;
+        this.setState({ cells, currentToken: token === Token.X ? Token.O : Token.X });
     }
 
     renderSquare(i: number) {
         return (
             <Square
-                value={this.state.squares[i]}
+                value={this.state.cells[i]}
                 onClick={() => this.handleClick(i)}
             />
         );
     }
 
     render() {
-        const msg = 'Next player: X';
-
         const rows = [0, 1, 2].map(i => (
             <div key={i} className='board-row'>
                 {this.renderSquare(3 * i)}
@@ -58,7 +61,7 @@ class Board extends React.Component<Props, State> {
 
         return (
             <div className='Board'>
-                <div className='prompt-message'>{msg}</div>
+                <div className='prompt-message'>Next player: {this.state.currentToken}</div>
                 {...rows}
             </div>
         );

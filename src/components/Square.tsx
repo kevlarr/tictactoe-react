@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './square.scss';
 
 interface Props {
     value: string | null;
@@ -6,9 +7,9 @@ interface Props {
 }
 
 const Square = (props: Props) => (
-    <button className='Square' onClick={props.onClick}>
-        {props.value}
-    </button>
+    <div className='Square' onClick={props.onClick}>
+        <span className='token'>{props.value}</span>
+    </div>
 );
 
 export default Square;

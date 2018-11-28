@@ -1,4 +1,21 @@
 .Square {
+    border: 1px solid #999;
+    cursor: pointer;
+    display: inline-block;
     height: 100px;
+    margin: 5px;
+    position: relative;
     width: 100px;
+
+    &:hover {
+        background: #efefef;
+    }
+
+    .token {
+        color: #999;
+        font-size: 48px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateX(-50%);
+    }
 }
