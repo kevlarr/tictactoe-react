@@ -1,12 +1,13 @@
-import * as React from 'react';
 import './square.scss';
+import * as React from 'react';
+import { Cell } from '../types';
 
 interface Props {
-    value: string | null;
+    value: Cell;
     onClick: () => void;
 }
 
-const Square = (props: Props) => (
+export const Square = (props: Props) => (
     <div className='Square' onClick={props.onClick}>
         <span className='token'>{props.value}</span>
     </div>
