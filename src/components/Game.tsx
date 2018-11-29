@@ -1,7 +1,7 @@
 import './game.scss';
 import * as React from 'react';
 import Board from './Board';
-import { Token, Cell } from '../types';
+import { Cell, Token, Round } from '../types';
 
 interface Props {
 };
@@ -14,12 +14,12 @@ interface State {
      *   3  4  5
      *   6  7  8
      */
-    history: Array<Array<Cell>>;
+    rounds: Array<Round>;
 
     /**
-     * The token for the current "round"
+     * The current round to display.
      */
-    currentToken: Token;
+    roundNumber: number;
 
     /**
      * Whether or not the game has been won
@@ -32,25 +32,35 @@ class Game extends React.Component<Props, State> {
         super(props);
 
         const cells = Array<Cell>(9);
+        const round = { cells, token: Token.X };
 
         for (let i = 0; i < 9; i++) { cells[i] = null };
 
         this.state = {
-            currentToken: Token.X,
-            history: [cells],
+            rounds: [round],
+            roundNumber: 0,
             won: false,
         };
     }
 
-    handleClick(i: number) {
-        const history = this.state.history;
-        let cells = history[history.length - 1];
+    /**
+     * Updates game to display given round
+     */
+    clickMove(roundNumber: number) {
+        this.setState({ roundNumber, won: false });
+    }
+
+    /**
+     * If a cell can be played, adds a Token and checks if won
+     */
+    clickBoard(i: number) {
+        const rounds = this.state.rounds.slice(0, this.state.roundNumber + 1);
+        let { token, cells } = rounds[rounds.length - 1];
 
         if (this.state.won || cells[i]) { return; }
 
         cells = cells.slice();
 
-        const token = this.state.currentToken;
         let nextToken = token;
         let won: boolean = this.state.won;
 
@@ -62,7 +72,11 @@ class Game extends React.Component<Props, State> {
             nextToken = token === Token.X ? Token.O : Token.X;
         }
 
-        this.setState({ won, history: [...history, cells], currentToken: nextToken });
+        this.setState({
+            rounds: [...rounds, { cells, token: nextToken }],
+            roundNumber: rounds.length,
+            won,
+        });
     }
 
     /**
@@ -90,21 +104,27 @@ class Game extends React.Component<Props, State> {
     }
 
     render() {
-        const history = this.state.history;
-        const cells = history[history.length - 1];
-        const msg = this.state.won ?
-            `${this.state.currentToken} won!` :
-            `Next player: ${this.state.currentToken}`;
+        const rounds = this.state.rounds;
+        const { cells, token } = rounds[this.state.roundNumber];
+        const msg = this.state.won ?  `${token} won!` : `Next player: ${token}`;
+
+        const moves = rounds.map((round, move) => (
+            <li key={`move-${move}`}>
+                <button onClick={() => this.clickMove(move)}>
+                    {move ? `Go to move #${move}` : 'Go to game start'}
+                </button>
+            </li>
+        )).slice(0, this.state.roundNumber);
 
         return (
             <div className='Game'>
                 <h1>tic tac toe</h1>
                 <div className='game-board'>
-                    <Board cells={cells} onClick={(i: number) => this.handleClick(i)} />
+                    <Board cells={cells} onClick={(i: number) => this.clickBoard(i)} />
                 </div>
                 <div className='game-info'>
                     <div className='prompt-message'>{msg}</div>
-                    <ol>{/* history */}</ol>
+                    <ol>{...moves}</ol>
                 </div>
             </div>
         );

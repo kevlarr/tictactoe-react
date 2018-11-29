@@ -19,7 +19,7 @@ function renderSquare(props: Props, i: number) {
 
 export const Board = (props: Props) => {
     const rows = [0, 1, 2].map(i => (
-        <div key={i} className='board-row'>
+        <div key={`row-${i}`} className='board-row'>
             {renderSquare(props, 3 * i)}
             {renderSquare(props, 3 * i + 1)}
             {renderSquare(props, 3 * i + 2)}
