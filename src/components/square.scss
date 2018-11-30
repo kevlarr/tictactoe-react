@@ -4,7 +4,7 @@
     cursor: pointer;
     display: inline-block;
     height: 100px;
-    margin: 5px;
+    margin: 3px 5px;
     position: relative;
     width: 100px;
     transition: background 0.25s, box-shadow 0.25s;
@@ -20,6 +20,7 @@
         font-size: 48px;
         position: absolute;
         top: 50%;
+        left: 50%;
         transform: translateY(-50%) translateX(-50%);
     }
 }

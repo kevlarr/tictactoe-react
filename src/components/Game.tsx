@@ -106,25 +106,27 @@ class Game extends React.Component<Props, State> {
     render() {
         const rounds = this.state.rounds;
         const { cells, token } = rounds[this.state.roundNumber];
-        const msg = this.state.won ?  `${token} won!` : `Next player: ${token}`;
+        const msg = this.state.won ?  `${token} won!` : `Place '${token}'`;
 
-        const moves = rounds.map((round, move) => (
-            <li key={`move-${move}`}>
-                <button onClick={() => this.clickMove(move)}>
-                    {move ? `Go to move #${move}` : 'Go to game start'}
-                </button>
+        const history = rounds.map((round, move) => (
+            <li key={`move-${move}`} className='history-item'>
+                <a className='item-link' onClick={() => this.clickMove(move)}>
+                    {round.token}
+                </a>
             </li>
         )).slice(0, this.state.roundNumber);
 
         return (
             <div className='Game'>
-                <h1>tic tac toe</h1>
-                <div className='game-board'>
-                    <Board cells={cells} onClick={(i: number) => this.clickBoard(i)} />
-                </div>
+                <h1 className='play-prompt'>{msg}</h1>
+
+                <Board cells={cells} onClick={(i: number) => this.clickBoard(i)} />
+
                 <div className='game-info'>
-                    <div className='prompt-message'>{msg}</div>
-                    <ol>{...moves}</ol>
+                    <div className='game-history'>
+                        <span className='history-label'>Go back to...</span>
+                        <ol className='history-list'>{...history}</ol>
+                    </div>
                 </div>
             </div>
         );

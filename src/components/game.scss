@@ -1,3 +1,44 @@
 .Game {
-    text-align: center;
+    display: inline-block;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+
+    .play-prompt {
+        color: #aaa;
+    }
+
+    .game-history {
+        color: #999;
+        height: 2em;
+        margin-top: 1em;
+    }
+
+    .history-list {
+        display: inline-block;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        .history-item {
+            display: inline-block;
+            margin: 0;
+            margin-left: 5px;
+        }
+
+        .item-link {
+            border-bottom: 3px dotted #999;
+            color: #999;
+            cursor: pointer;
+            padding: 0 3px;
+            transition: border-bottom 0.25s, color 0.25s;
+
+            &:hover {
+                border-bottom: 3px dotted teal;
+                color: teal;
+                transition: border-bottom 0.25s, color 0.25s;
+            }
+        }
+    }
 }
