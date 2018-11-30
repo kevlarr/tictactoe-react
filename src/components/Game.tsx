@@ -1,30 +1,15 @@
 import './game.scss';
 import * as React from 'react';
 import Board from './Board';
-import { Cell, Token, Round } from '../types';
+import { Cell, PlayState, Token, Round } from '../types';
 
 interface Props {
 };
 
 interface State {
-    /**
-     * The history of the state of cells, including most recent.
-     * The "grid" of the game looks like...
-     *   0  1  2
-     *   3  4  5
-     *   6  7  8
-     */
     rounds: Array<Round>;
-
-    /**
-     * The current round to display.
-     */
     roundNumber: number;
-
-    /**
-     * Whether or not the game has been won
-     */
-    won: boolean;
+    playState: PlayState;
 }
 
 class Game extends React.Component<Props, State> {
@@ -39,54 +24,56 @@ class Game extends React.Component<Props, State> {
         this.state = {
             rounds: [round],
             roundNumber: 0,
-            won: false,
+            playState: PlayState.Playing,
         };
     }
 
     /**
-     * Updates game to display given round
+     * Updates round number and play state, but defers updating rounds
+     * themselves until it's necessary to
      */
-    clickMove(roundNumber: number) {
-        this.setState({ roundNumber, won: false });
+    clickRound(roundNumber: number) {
+        this.setState({
+            roundNumber,
+            playState: PlayState.Playing,
+        });
     }
 
     /**
-     * If a cell can be played, adds a Token and checks if won
+     * If a cell can be played, adds a Token and updates rounds
+     * and play state
      */
     clickBoard(i: number) {
         const rounds = this.state.rounds.slice(0, this.state.roundNumber + 1);
         let { token, cells } = rounds[rounds.length - 1];
 
-        if (this.state.won || cells[i]) { return; }
+        if (this.state.playState === PlayState.Won || cells[i]) { return; }
 
         cells = cells.slice();
-
-        let nextToken = token;
-        let won: boolean = this.state.won;
-
         cells[i] = token;
 
-        if (this.moveWon(cells)) {
-            won = true;
-        } else {
+        const playState = this.newPlayState(cells);
+        let nextToken = token;
+
+        if (playState === PlayState.Playing) {
             nextToken = token === Token.X ? Token.O : Token.X;
         }
 
         this.setState({
             rounds: [...rounds, { cells, token: nextToken }],
             roundNumber: rounds.length,
-            won,
+            playState,
         });
     }
 
     /**
-     * Determines if the set of cells has a winner. Requires passing in the cells
+     * Determines if the board is a win or a draw. Requires passing in the cells
      * to allow for calling this prior to `setState` finishing.
      *
      * For a small 3x3 board, checking every combination on each move is probably
      * a little cleaner (and less breakable) than figuring out which cells to check.
      */
-    moveWon(cells: Array<Token | null>): boolean {
+    newPlayState(cells: Array<Token | null>): PlayState {
         const lines = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontal
             [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertical
@@ -96,21 +83,31 @@ class Game extends React.Component<Props, State> {
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if (cells[a] && cells[a] === cells[b] && cells[b] === cells[c]) {
-                return true;
+                return PlayState.Won;
             }
         }
 
-        return false;
+        if (cells.filter(c => !!c).length === 9) {
+            return PlayState.Draw;
+        }
+
+        return PlayState.Playing;
     }
 
     render() {
         const rounds = this.state.rounds;
         const { cells, token } = rounds[this.state.roundNumber];
-        const msg = this.state.won ?  `${token} won!` : `Place '${token}'`;
+        let msg;
+
+        switch (this.state.playState) {
+            case PlayState.Won:  msg = `${token} won!`; break;
+            case PlayState.Draw: msg = 'Draw'; break;
+            default: msg = `Place '${token}'`;
+        }
 
         const history = rounds.map((round, move) => (
             <li key={`move-${move}`} className='history-item'>
-                <a className='item-link' onClick={() => this.clickMove(move)}>
+                <a className='item-link' onClick={() => this.clickRound(move)}>
                     {round.token}
                 </a>
             </li>
